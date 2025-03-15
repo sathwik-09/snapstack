@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
 import { Schema, Model } from "mongoose";
+import dotenv from 'dotenv';
+dotenv.config();
 
-mongoose.connect('mongodb+srv://sathwik:Sathwik123@cluster0.iunwd.mongodb.net/snapstack')
+mongoose.connect(process.env.MONGO_URL as string);
 
 const userSchema = new Schema({
   username: {type: String, required: true, unique: true},
