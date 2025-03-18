@@ -1,11 +1,12 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import {z} from 'zod'
-import { contentModel, userModel } from './db';
+import { contentModel, linkModel, userModel } from './db';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import { userMiddleware } from './middleware';
 import mongoose from 'mongoose';
+import { random } from './utils';
 dotenv.config();
 
 const app = express();
@@ -120,4 +121,29 @@ app.delete('/api/v1/content/:id', userMiddleware, async (req,res)=>{
     })
   }
 })
+
+app.post("/api/v1/content/stack/share", userMiddleware, async (req,res)=>{
+  const {share} = req.body;
+  if(share){
+    await linkModel.create({
+      hash: random(10),
+      //@ts-ignore
+      userId: req.userId
+    })
+  } else {
+    await linkModel.deleteOne({
+      //@ts-ignore
+      userId: req.userId
+    })
+  }
+  res.json({
+    message: "updated sharable link"
+  })
+})
+
+app.post('/api/v1/content/stack/share/link', userMiddleware, async (req,res)=>{
+
+})
+
+
 app.listen(3000);
