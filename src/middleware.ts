@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { userModel } from "./db";
 
 export const userMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const header = req.headers.authorization;
