@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { Schema, Model } from "mongoose";
 import dotenv from 'dotenv';
+
 dotenv.config();
 
 mongoose.connect(process.env.MONGO_URL as string);
@@ -19,7 +20,13 @@ const contentSchema = new Schema({
   tags: [{type: mongoose.Schema.Types.ObjectId, ref: 'Tag'}],
   userId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'}
 });
-
 export const contentModel = mongoose.model('Content', contentSchema);
+
+const LinkSchema = new Schema({
+  hash: String,
+  userId: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User', unique: true}
+});
+
+export const linkModel = mongoose.model('Links', LinkSchema);
 
 
