@@ -48,8 +48,8 @@ app.post('/api/v1/signup', async (req, res) => {
 })
 
 app.post('/api/v1/signin', async(req,res)=>{
-  const {username, email, password} = req.body;
-  const existingUser = await userModel.findOne({username: username, email: email});
+  const {email, password} = req.body;
+  const existingUser = await userModel.findOne({ email: email});
   if(!existingUser){
     res.status(401).json({
       message: "User not found"
@@ -89,10 +89,17 @@ app.post('/api/v1/content', userMiddleware, async (req,res)=>{
 
 
 app.get('/api/v1/content', userMiddleware, async (req,res)=>{
-  // @ts-ignore
-  const userId = req.userId;
-  const content = await contentModel.find({userId: userId}).populate('userId', 'username');
-  res.json(content);
+  try{
+     // @ts-ignore
+    const userId = req.userId;
+    const content = await contentModel.find({userId: userId}).populate('userId', 'username');
+    res.json({content});
+  }
+  catch (error) {
+    res.status(500).json({
+      message: "Internal server error"
+    })
+  }
 })
 
 app.delete('/api/v1/content/:id', userMiddleware, async (req,res)=>{
